@@ -1,0 +1,14 @@
+{
+	"name": "individual2",
+	"version": "1.0.0",
+	"main": "index.js",
+	"author": "tattzetey",
+	"license": "MIT",
+	"dependencies": {
+		"express": "^4.17.2",
+		"mongodb": "^4.3.0"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.15"
+	}
+}
