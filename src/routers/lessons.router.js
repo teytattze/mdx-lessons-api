@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { getLessons } from '../handlers/lessons.handler.js';
+import * as Handler from '../handlers/lessons.handler.js';
 
 const router = Router();
 
-router.get('/', getLessons);
+router.get('/', Handler.getLessons);
+router.put('/:id/update', Handler.updateLessons);
 
 export default router;

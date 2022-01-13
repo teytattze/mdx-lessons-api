@@ -5,7 +5,7 @@ const environments = {
   mongodb: {
     user: 'admin',
     password: 'XpOHMVONxI0X0aue',
-    database: 'individual_db',
+    database: 'groupwork_db',
   },
 };
 

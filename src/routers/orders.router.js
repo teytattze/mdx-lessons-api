@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { getOrders } from '../handlers/orders.handler.js';
+import * as Handler from '../handlers/orders.handler.js';
 
 const router = Router();
 
-router.get('/', getOrders);
+router.get('/', Handler.getOrders);
 
 export default router;

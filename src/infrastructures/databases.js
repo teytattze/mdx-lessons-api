@@ -13,12 +13,12 @@ export const initDB = async () => {
 
   const client = new MongoClient(mongoUri);
 
-  console.log(client);
-
   conn = await client.connect();
   db = conn.db(database);
 
   console.log('Connect to mongodb successfully...');
 };
 
-export { db };
+export const getDB = () => {
+  return db;
+};
