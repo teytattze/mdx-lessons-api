@@ -1,9 +1,11 @@
 import { ObjectID } from 'bson';
 import { getDB } from '../infrastructures/databases.js';
 
+const LESSONS_COLLECTION = 'lessons';
+
 export const findLessons = async () => {
   try {
-    const collection = getDB().collection('lessons');
+    const collection = getDB().collection(LESSONS_COLLECTION);
     const cursor = await collection.find();
     const result = await cursor.toArray();
     await cursor.close();
@@ -16,7 +18,7 @@ export const findLessons = async () => {
 
 export const updateLesson = async (id, data) => {
   try {
-    const collection = getDB().collection('lessons');
+    const collection = getDB().collection(LESSONS_COLLECTION);
     const result = await collection.updateOne(
       { _id: new ObjectID(id) },
       { $set: data },
