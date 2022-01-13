@@ -1,0 +1,14 @@
+# IDE
+.vscode
+.idea
+
+# NODE
+node_modules
+
+# OUTPUT
+build
+dist
+out
+
+# MISC
+.DS_STORE
