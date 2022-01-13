@@ -1,10 +1,10 @@
 import app from './app.js';
-
-const PORT = process.env.SERVER_PORT || 3000;
+import { config } from './infrastructures/config.js';
 
 const bootstrap = async () => {
-  app.listen(PORT, () => {
-    console.log(`Listening on localhost:${PORT}...`);
+  const port = config.get('server.port');
+  app.listen(port, () => {
+    console.log(`Listening on localhost:${port}...`);
   });
 };
 
