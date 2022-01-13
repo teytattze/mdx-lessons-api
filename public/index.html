@@ -4,9 +4,391 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Individual 2</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./css/globals.css" />
+    <script
+      src="https://kit.fontawesome.com/6347409dbf.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://unpkg.com/vue@next"></script>
+    <title>MDX Courses</title>
   </head>
   <body>
-    Hello World!
+    <div id="app">
+      <!-- Navbar -->
+      <nav
+        class="navbar navbar-light bg-light py-3 sticky-top shadow-transition"
+        :class="navbarShadow"
+      >
+        <div
+          class="container-xl px-4 h-100 w-100 d-flex justify-content-between align-items-center"
+        >
+          <div class="mb-2 mb-sm-0">
+            <span class="navbar-brand mb-0 h1">MDXTuition</span>
+          </div>
+          <div class="d-flex align-items-center">
+            <button
+              class="btn btn-outline-primary me-2"
+              @click="navigateToCoursesPage"
+            >
+              Courses
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary position-relative"
+              @click="navigateToCartPage"
+            >
+              <i class="fas fa-shopping-cart"></i>
+              <span
+                v-show="isCartHasItem"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              >
+                {{ cartItemsNumber }}
+                <span class="visually-hidden">unread messages</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Page Header -->
+      <header class="container-xl px-4 pt-4">
+        <h1>{{ pageTitle }}</h1>
+      </header>
+
+      <!-- Courses Page -->
+      <main v-if="isShowCoursesPage" class="container-xl p-4">
+        <!-- Filter Bar -->
+        <nav class="mb-4">
+          <!-- Filter Input -->
+          <div class="row g-4 justify-content-between">
+            <div class="col-12 col-sm-5 col-md-4">
+              <div class="w-100 input-group">
+                <span class="input-group-text" id="addon-wrapping"
+                  >Sorted By</span
+                >
+                <select
+                  id="filter"
+                  class="form-select"
+                  v-model="selectedSortOption"
+                  aria-label="Select a sort filter"
+                >
+                  <option value="">Select a sort filter...</option>
+                  <option
+                    v-for="option in sortOptions"
+                    :key="option"
+                    :value="getSortOptionObj(option).value"
+                  >
+                    {{ getSortOptionObj(option).title }}
+                  </option>
+                </select>
+              </div>
+            </div>
+            <div class="col-12 col-sm-7 col-md-6">
+              <div class="w-100 input-group">
+                <input
+                  class="form-control"
+                  type="search"
+                  placeholder="Search..."
+                  v-model="searchTerm"
+                  aria-label="Search"
+                />
+                <button class="btn btn-outline-primary" type="button">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </nav>
+        <!-- Courses List -->
+        <div class="row g-4">
+          <div
+            v-for="lesson in filteredLessons"
+            :key="lesson.subject"
+            class="col-12 col-sm-6 col-md-4 col-lg-3"
+          >
+            <div class="card w-100 h-100">
+              <div class="p-5 border-bottom">
+                <img
+                  :src="lesson.imageUrl"
+                  class="card-img-top"
+                  :alt="lesson.subject"
+                />
+              </div>
+              <div class="card-body py-4">
+                <div class="mb-3">
+                  <div v-if="lesson.isOnlineClass" class="badge bg-info">
+                    <i :class="lesson.icon"></i>
+                    <p class="d-inline ms-1">Online</p>
+                  </div>
+                  <div v-else class="badge bg-success">
+                    <i :class="lesson.icon"></i>
+                    <p class="d-inline ms-1">Physical</p>
+                  </div>
+                </div>
+                <h1 class="fs-5 text-truncate">{{ lesson.subject }}</h1>
+                <div
+                  class="w-25 mt-3 mb-3 bg-secondary bg-opacity-25 rounded-pill"
+                  style="height: 2px"
+                ></div>
+                <div class="h-auto mb-4">
+                  <p class="my-0">Location: {{ lesson.location }}</p>
+                  <p class="my-0">Price: {{ lesson.price }}</p>
+                  <p class="my-0">Slot: {{ lesson.slot }}</p>
+                </div>
+                <button
+                  class="btn btn-primary"
+                  v-if="isCourseFull(lesson.id)"
+                  disabled
+                >
+                  Course Full
+                </button>
+                <button
+                  class="btn btn-primary"
+                  v-else
+                  @click="addOneItemToCart(lesson.id)"
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="mt-5 text-center">
+          <button
+            @click="navigateToCartPage"
+            class="btn btn-outline-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#checkoutModal"
+          >
+            <span class="me-2">View Cart</span>
+            <i class="fas fa-angle-right"></i>
+          </button>
+        </footer>
+      </main>
+
+      <!-- Cart Page -->
+      <main v-if="isShowCartPage" class="container-xl p-4">
+        <div v-if="isCartHasItem">
+          <ul class="list-group">
+            <li class="list-group-item" v-for="item in cartItems">
+              <div class="row align-items-center">
+                <div class="col-12 col-sm-5 col-md-4 col-lg-3 p-5">
+                  <img :src="item.imageUrl" class="img-fluid" />
+                </div>
+                <div
+                  class="col-12 col-sm-7 col-md-8 col-lg-9 p-4 d-flex flex-column flex-md-row align-items-md-center justify-content-md-between"
+                >
+                  <div class="mb-3 mb-md-0">
+                    <div class="mb-2">
+                      <div v-if="item.isOnlineClass" class="badge bg-info">
+                        <i :class="item.icon"></i>
+                        <p class="d-inline ms-1">Online</p>
+                      </div>
+                      <div v-else class="badge bg-success">
+                        <i :class="item.icon"></i>
+                        <p class="d-inline ms-1">Physical</p>
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <h1 class="fs-5 mb-0 text-truncate">
+                        {{ item.subject }}
+                      </h1>
+                      <button
+                        class="btn btn-light btn-sm ms-2"
+                        @click="removeItemsFromCart(item.id)"
+                      >
+                        <i class="fas fa-times text-danger"></i>
+                      </button>
+                    </div>
+                    <div
+                      class="w-25 mt-3 mb-3 bg-secondary bg-opacity-25 rounded-pill"
+                      style="height: 2px"
+                    ></div>
+                    <p class="mb-0 text-secondary">
+                      Location: {{ item.location }}
+                    </p>
+                    <p class="mb-0 text-secondary">Price: {{ item.price }}</p>
+                  </div>
+                  <div
+                    class="input-group input-group-sm"
+                    style="min-width: 100px; width: 100px"
+                  >
+                    <button
+                      class="btn btn-outline-secondary"
+                      @click="removeOneItemFromCart(item.id)"
+                    >
+                      <i class="fas fa-minus"></i>
+                    </button>
+                    <input
+                      type="number"
+                      class="form-control"
+                      aria-label="Item quantity"
+                      style="width: 24px"
+                      v-model="item.quantity"
+                      disabled
+                    />
+                    <button
+                      class="btn btn-outline-secondary"
+                      @click="addOneItemToCart(item.id)"
+                    >
+                      <i class="fas fa-plus"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+          <footer class="mt-5 text-center">
+            <button
+              @click="navigateToCheckoutPage"
+              class="btn btn-outline-primary"
+            >
+              <span class="me-2">Checkout</span>
+              <i class="fas fa-angle-right"></i>
+            </button>
+          </footer>
+        </div>
+        <div v-else>
+          <h1 class="fs-5 text-secondary mb-4">
+            Your cart is currently empty. Please consider add some items before
+            checkout
+          </h1>
+          <button
+            @click="navigateToCoursesPage"
+            class="btn btn-outline-primary"
+          >
+            <i class="fas fa-angle-left"></i>
+            <span class="ms-2">Continue Shopping</span>
+          </button>
+        </div>
+      </main>
+
+      <!-- Checkout Page -->
+      <main v-if="isShowCheckoutPage" class="container-xl p-4">
+        <div class="row g-4">
+          <div class="col-md-6 col-lg-8">
+            <h1 class="fs-4">Personal Information</h1>
+            <form class="py-4">
+              <div class="mb-4 row gx-4 gy-3">
+                <div class="col-12 col-lg-6">
+                  <label for="firstName" class="form-label mb-1"
+                    >First Name</label
+                  >
+                  <input
+                    v-model="checkoutDetails.firstName"
+                    type="text"
+                    class="form-control"
+                    id="firstName"
+                    placeholder="Enter your first name..."
+                  />
+                </div>
+                <div class="col-12 col-lg-6">
+                  <label for="surname" class="form-label mb-1">Surname</label>
+                  <input
+                    v-model="checkoutDetails.surname"
+                    type="text"
+                    class="form-control"
+                    id="surname"
+                    placeholder="Enter your surname..."
+                  />
+                </div>
+                <div class="col-12 col-lg-6">
+                  <label for="email" class="form-label mb-1"
+                    >Email address</label
+                  >
+                  <input
+                    v-model="checkoutDetails.email"
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    placeholder="Enter your email address..."
+                  />
+                </div>
+                <div class="col-12 col-lg-6">
+                  <label for="phoneNo" class="form-label mb-1"
+                    >Phone Number</label
+                  >
+                  <input
+                    v-model="checkoutDetails.phoneNo"
+                    type="text"
+                    class="form-control"
+                    id="phoneNo"
+                    placeholder="Enter your phone number..."
+                  />
+                </div>
+              </div>
+              <button
+                class="btn btn-outline-primary"
+                type="button"
+                id="liveToastBtn"
+                @click="handleSubmitCheckout"
+              >
+                Submit
+              </button>
+            </form>
+          </div>
+          <div class="col-md-6 col-lg-4">
+            <div class="w-100 rounded shadow-lg p-4">
+              <h2 class="fs-5">Summary</h2>
+              <div
+                class="w-100 mt-3 mb-3 bg-secondary bg-opacity-25 rounded-pill"
+                style="height: 2px"
+              ></div>
+              <div class="overflow-auto" style="max-height: 360px">
+                <div class="row">
+                  <div
+                    v-for="item in cartItems"
+                    :key="item.id"
+                    class="col-12 col-sm-6 col-md-12 row align-items-center py-3"
+                  >
+                    <div class="col-3">
+                      <img
+                        :src="item.imageUrl"
+                        alt="item.subject"
+                        class="img-fluid"
+                      />
+                    </div>
+                    <div class="col-9">
+                      <h1 class="fs-6 text-truncate mb-1">
+                        {{ item.subject }}
+                      </h1>
+                      <p class="mb-0 text-secondary">
+                        Quantity: {{ item.quantity }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+      <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div
+          class="bg-white border border-light shadow-lg rounded"
+          role="alert"
+        >
+          <div class="toast-header">
+            <strong class="me-auto">Your Orders</strong>
+            <button type="button" class="btn-close"></button>
+          </div>
+          <div class="toast-body">
+            <p>Thank you!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" src="./js/app.js"></script>
   </body>
 </html>
