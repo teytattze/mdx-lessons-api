@@ -2,7 +2,7 @@ import { getDB } from '../infrastructures/databases.js';
 
 const ORDERS_COLLECTION = 'orders';
 
-export const findOrders = () => {
+export const findOrders = async () => {
   try {
     const collection = getDB().collection(ORDERS_COLLECTION);
     const cursor = await collection.find();

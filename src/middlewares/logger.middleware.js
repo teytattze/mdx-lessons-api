@@ -1,4 +1,4 @@
-export const logger = (req, _, next) => {
+export const logger = () => (req, _, next) => {
   const path = req.url;
   const method = req.method;
 

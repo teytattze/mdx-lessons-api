@@ -1,5 +1,6 @@
 import { ObjectID } from 'bson';
 import { getDB } from '../infrastructures/databases.js';
+import { renameResultID } from '../infrastructures/transforms.js';
 
 const LESSONS_COLLECTION = 'lessons';
 
@@ -10,7 +11,7 @@ export const findLessons = async () => {
     const result = await cursor.toArray();
     await cursor.close();
 
-    return result;
+    return renameResultID(result);
   } catch (err) {
     console.log(err);
   }
