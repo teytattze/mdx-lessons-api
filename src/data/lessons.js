@@ -1,7 +1,7 @@
-import { config } from '../infrastructures/config.js';
+import { config } from '../common/config.js';
 
-export const BASE_IMAGE_URL = `http://${config.get(
-  'server.hostname',
+export const BASE_IMAGE_URL = `${config.get(
+  'static.imagesBaseUrl',
 )}/assets/images`;
 
 export const lessons = [
@@ -103,5 +103,14 @@ export const lessons = [
     slot: 5,
     icon: 'fas fa-globe',
     imageUrl: BASE_IMAGE_URL + '/testing-and-verification.png',
+  },
+  {
+    subject: 'Distributed System',
+    location: 'Brent Cross',
+    isOnlineClass: false,
+    price: 60,
+    slot: 10,
+    icon: 'fas fa-school',
+    imageUrl: BASE_IMAGE_URL + '/distributed-system.png',
   },
 ];

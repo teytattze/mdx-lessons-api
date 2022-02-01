@@ -1,4 +1,4 @@
-import { getDB } from '../infrastructures/databases.js';
+import { getDB } from '../common/databases.js';
 
 const ORDERS_COLLECTION = 'orders';
 

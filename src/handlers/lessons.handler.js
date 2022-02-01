@@ -5,9 +5,8 @@ export const getLessons = async (req, res, next) => {
   res.json(lessons);
 };
 
-export const updateLessons = async (req, res, next) => {
-  const { id } = req.params;
-  const body = req.body;
-  const result = await Repository.updateLesson(id, body);
+export const bulkUpdateLessons = async (req, res, next) => {
+  const { data } = req.body;
+  const result = await Repository.bulkUpdateLessons(data);
   res.json(result);
 };

@@ -1,6 +1,6 @@
-import { ObjectID } from 'bson';
-import { getDB } from '../infrastructures/databases.js';
-import { renameResultID } from '../infrastructures/transforms.js';
+import { ObjectId } from 'bson';
+import { getDB } from '../common/databases.js';
+import { renameResultID } from '../lib/transforms.js';
 
 const LESSONS_COLLECTION = 'lessons';
 
@@ -17,14 +17,16 @@ export const findLessons = async () => {
   }
 };
 
-export const updateLesson = async (id, data) => {
+export const bulkUpdateLessons = async (data) => {
   try {
     const collection = getDB().collection(LESSONS_COLLECTION);
-    const result = await collection.updateOne(
-      { _id: new ObjectID(id) },
-      { $set: data },
-    );
-    return result;
+    const lessons = data.map((lesson) => ({
+      updateOne: {
+        filter: { _id: new ObjectId(lesson.id) },
+        update: { $set: { slot: lesson.slot } },
+      },
+    }));
+    return await collection.bulkWrite(lessons);
   } catch (err) {
     console.log(err);
   }

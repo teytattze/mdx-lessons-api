@@ -1,6 +1,6 @@
 import app from './app.js';
-import { config } from './infrastructures/config.js';
-import { initDB } from './infrastructures/databases.js';
+import { config } from './common/config.js';
+import { initDB } from './common/databases.js';
 
 const bootstrap = async () => {
   await initDB();

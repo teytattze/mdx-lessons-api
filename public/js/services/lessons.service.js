@@ -10,14 +10,16 @@ export const getLessons = async () => {
   }
 };
 
-export const updateLesson = async (id, data) => {
+export const bulkUpdateLessons = async (data) => {
   try {
-    const res = await fetch(`${BASE_URL}/${id}/update`, {
+    const res = await fetch(`${BASE_URL}/bulk/update`, {
       method: 'PUT',
-      body: data,
+      body: JSON.stringify({ data }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
-    const result = await res.json();
-    return result;
+    return await res.json();
   } catch (err) {
     console.log(err);
   }

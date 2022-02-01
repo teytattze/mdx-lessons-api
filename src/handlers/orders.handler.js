@@ -6,7 +6,7 @@ export const getOrders = async (req, res) => {
 };
 
 export const createOrder = async (req, res) => {
-  const body = req.body();
-  const result = await Repository.createOrder(body);
+  const { data } = req.body;
+  const result = await Repository.createOrder(data);
   res.json(result);
 };
