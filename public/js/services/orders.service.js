@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:3000/api/orders';
+const BASE_URL = 'https://mdx-lessons.herokuapp.com/api/orders';
 
 export const createOrder = async (data) => {
   try {

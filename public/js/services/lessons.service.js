@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:3000/api/lessons';
+const BASE_URL = 'https://mdx-lessons.herokuapp.com/api/lessons';
 
 export const getLessons = async () => {
   try {
