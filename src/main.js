@@ -7,7 +7,7 @@ const bootstrap = async () => {
 
   const port = config.get('server.port');
   app.listen(port, () => {
-    console.log(`Listening on localhost:${port}...`);
+    console.log(`Listening on PORT ${port}...`);
   });
 };
 

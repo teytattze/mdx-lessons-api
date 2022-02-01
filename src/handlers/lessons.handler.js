@@ -1,12 +1,20 @@
 import * as Repository from '../repositories/lessons.repository.js';
 
 export const getLessons = async (req, res, next) => {
-  const lessons = await Repository.findLessons();
-  res.json(lessons);
+  try {
+    const lessons = await Repository.findLessons();
+    res.json(lessons);
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export const bulkUpdateLessons = async (req, res, next) => {
-  const { data } = req.body;
-  const result = await Repository.bulkUpdateLessons(data);
-  res.json(result);
+  try {
+    const { data } = req.body;
+    const result = await Repository.bulkUpdateLessons(data);
+    res.json(result);
+  } catch (err) {
+    console.log(err);
+  }
 };
