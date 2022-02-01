@@ -16,6 +16,8 @@ const environments = {
   },
 };
 
+console.log(environments);
+
 export const config = {
   get: (value) => {
     const names = value.split('.');
