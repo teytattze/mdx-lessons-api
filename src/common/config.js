@@ -2,9 +2,9 @@ import 'dotenv/config';
 
 const environments = {
   server: {
-    host: process.env.SERVER_HOST,
-    port: process.env.SERVER_PORT,
-    hostname: process.env.SERVER_HOSTNAME,
+    host: process.env.HOST,
+    port: process.env.PORT,
+    hostname: process.env.HOSTNAME,
   },
   mongodb: {
     user: process.env.MONGODB_USER,
@@ -15,8 +15,6 @@ const environments = {
     imagesBaseUrl: process.env.STATIC_IMAGES_BASE_URL,
   },
 };
-
-console.log(environments);
 
 export const config = {
   get: (value) => {

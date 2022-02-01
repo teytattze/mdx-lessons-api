@@ -4,7 +4,6 @@ import { initDB } from './common/databases.js';
 
 const bootstrap = async () => {
   await initDB();
-
   const port = config.get('server.port') || 3000;
   app.listen(port, () => {
     console.log(`Listening on PORT ${port}...`);
