@@ -1,3 +1,9 @@
+import {
+  getLessons,
+  searchAbort,
+  searchLessons,
+} from '../services/lessons.service.js';
+
 export const ASCENDING_ORDER = 'ASC';
 export const DESCENDING_ORDER = 'DESC';
 
@@ -54,6 +60,7 @@ export const sortOptions = {
 
 export const lessonsData = {
   lessons: [],
+  searchController: null,
   filters: {
     searchTerms: '',
     selectedSortOption: '',
@@ -80,17 +87,27 @@ export const lessonsMethods = {
 export const lessonsComputed = {
   filteredLessons: function () {
     const option = sortOptions[this.filters.selectedSortOption] || '';
-    const searchTerms = this.filters.searchTerms;
     return sortLessons(this.lessons, option.field, {
       order: option.order,
-    }).filter(
-      (lesson) =>
-        lesson.subject.toLowerCase().includes(searchTerms.toLowerCase()) ||
-        lesson.location.toLowerCase().includes(searchTerms.toLowerCase()),
-    );
+    });
   },
   sortOptions: function () {
     return [...Object.keys(sortOptions)].map((option) => sortOptions[option]);
+  },
+};
+
+export const lessonsWatch = {
+  'filters.searchTerms': async function (keyword, prev) {
+    if (this.searchController) this.searchController.abort();
+    this.searchController = new AbortController();
+    const { signal } = this.searchController;
+    if (keyword) {
+      this.lessons = await searchLessons(keyword, { signal });
+      this.searchController = null;
+      return;
+    }
+    this.lessons = await getLessons();
+    this.searchController = null;
   },
 };
 

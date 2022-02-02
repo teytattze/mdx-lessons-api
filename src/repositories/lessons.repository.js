@@ -26,7 +26,7 @@ export const searchLessons = async (keyword) => {
     const result = await cursor.toArray();
     await cursor.close();
 
-    return result;
+    return renameResultID(result);
   } catch (err) {
     console.log(err);
   }

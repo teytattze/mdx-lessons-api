@@ -4,6 +4,7 @@ import {
   lessonsComputed,
   lessonsData,
   lessonsMethods,
+  lessonsWatch,
 } from './modules/lessons.js';
 import { cartComputed, cartData, cartMethods } from './modules/cart.js';
 import {
@@ -38,6 +39,7 @@ const app = Vue.createApp({
     ...checkoutComputed,
   },
   watch: {
+    ...lessonsWatch,
     ...checkoutWatch,
   },
   beforeMount: function () {

@@ -1,4 +1,4 @@
-const BASE_URL = 'https://mdx-lessons.herokuapp.com/api/lessons';
+const BASE_URL = 'http://localhost:3000/api/lessons';
 
 export const getLessons = async () => {
   try {
@@ -10,16 +10,18 @@ export const getLessons = async () => {
   }
 };
 
-export const searchLessons = async (keyword) => {
-  const controller = new AbortController();
-  const { signal } = controller;
+export const searchLessons = async (keyword, options) => {
   try {
-    const res = await fetch(`${BASE_URL}?keyword=${keyword}`, { signal });
+    const res = await fetch(`${BASE_URL}/search?keyword=${keyword}`, options);
     const result = await res.json();
     return result;
   } catch (err) {
     console.log(err);
   }
+};
+
+export const searchAbort = () => {
+  controller.abort();
 };
 
 export const bulkUpdateLessons = async (data) => {
