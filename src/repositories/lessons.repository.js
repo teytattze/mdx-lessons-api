@@ -17,6 +17,21 @@ export const findLessons = async () => {
   }
 };
 
+export const searchLessons = async (keyword) => {
+  try {
+    const collection = getDB().collection(LESSONS_COLLECTION);
+    const cursor = await collection.find({
+      $text: { $search: keyword },
+    });
+    const result = await cursor.toArray();
+    await cursor.close();
+
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const bulkUpdateLessons = async (data) => {
   try {
     const collection = getDB().collection(LESSONS_COLLECTION);
