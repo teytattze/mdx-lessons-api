@@ -10,6 +10,18 @@ export const getLessons = async () => {
   }
 };
 
+export const searchLessons = async (keyword) => {
+  const controller = new AbortController();
+  const { signal } = controller;
+  try {
+    const res = await fetch(`${BASE_URL}?keyword=${keyword}`, { signal });
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 export const bulkUpdateLessons = async (data) => {
   try {
     const res = await fetch(`${BASE_URL}/bulk/update`, {
