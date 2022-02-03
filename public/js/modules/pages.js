@@ -35,7 +35,7 @@ export const pagesComputed = {
       case CHECKOUT_PAGE:
         return 'Checkout';
       case HOME_PAGE:
-        return 'Courses';
+        return 'Lessons';
     }
   },
 };
